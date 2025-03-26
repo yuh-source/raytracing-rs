@@ -2,7 +2,7 @@ use std::f32::consts::PI;
 
 use macroquad::prelude::*;
 
-const RAY_COUNT: usize = 150;
+const RAY_COUNT: usize = 1000;
 
 struct Circle {
     x: f32,
@@ -30,6 +30,26 @@ impl Circle {
             let pos = mouse_position();
             self.update(pos.0, pos.1, self.r);
         }
+    }
+
+    fn circular_movement(&mut self) {
+        let w: f32 = screen_width();
+        let h: f32 = screen_height();
+        
+        // Center of the screen
+        let center_x = w as f32 / 2.0;
+        let center_y = h as f32 / 2.0;
+        
+        // Radius of the circular path
+        let path_radius = center_x.min(center_y) * 0.6; // 60% of the smaller dimension
+        
+        // Calculate position based on time
+        let time = get_time() as f32;
+        let angle = time * 0.5; // Control speed of rotation
+        
+        // Update circle position
+        self.x = center_x + path_radius * angle.cos();
+        self.y = center_y + path_radius * angle.sin();
     }
 
     fn draw(&self) {
@@ -99,7 +119,7 @@ async fn main() {
         r: 50.0,
     };
 
-    let shadow_circle = Circle {
+    let mut shadow_circle = Circle {
         x: screen_width()*3.0/4.0,
         y: screen_height()/2.0,
         r: 100.0,
@@ -112,6 +132,7 @@ async fn main() {
         light_circle.draw();
         shadow_circle.draw();
 
+        shadow_circle.circular_movement();
         light_circle.follow_pointer();
 
         light_circle.draw_rays(&shadow_circle);
