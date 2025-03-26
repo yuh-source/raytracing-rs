@@ -35,21 +35,13 @@ impl Circle {
     fn circular_movement(&mut self) {
         let w: f32 = screen_width();
         let h: f32 = screen_height();
+        let path_radius = h / 2.0 * 0.6;
         
-        // Center of the screen
-        let center_x = w as f32 / 2.0;
-        let center_y = h as f32 / 2.0;
-        
-        // Radius of the circular path
-        let path_radius = center_x.min(center_y) * 0.6; // 60% of the smaller dimension
-        
-        // Calculate position based on time
         let time = get_time() as f32;
-        let angle = time * 0.5; // Control speed of rotation
+        let angle = time * 0.5; // controls movement speed
         
-        // Update circle position
-        self.x = center_x + path_radius * angle.cos();
-        self.y = center_y + path_radius * angle.sin();
+        self.x = w / 2.0 + path_radius * angle.cos();
+        self.y = h / 2.0 + path_radius * angle.sin();
     }
 
     fn draw(&self) {
