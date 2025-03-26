@@ -6,11 +6,7 @@ struct Circle {
     r: f32,
 }
 
-trait Draw {
-    fn draw(&self);
-}
-
-impl Draw for Circle {
+impl Circle {
     fn draw(&self) {
         let r_sqr = self.r*self.r;
         let mut x: f32 = self.x-self.r;
@@ -34,23 +30,29 @@ impl Draw for Circle {
     }
 }
 
+fn pointer_circle() {
+    let pos = mouse_position();
+
+    let circle = Circle {
+        x: pos.0,
+        y: pos.1,
+        r: 50.0,
+    };
+
+    if is_mouse_button_down(MouseButton::Left) {
+        circle.draw();
+    }
+}
+
 
 #[macroquad::main("raytracing")]
 async fn main() {
     loop {
         clear_background(BLACK);
 
-        let pos = mouse_position();
+        draw_circle(500.0, 500.0, 50.0, WHITE);
 
-        let circle = Circle {
-            x: pos.0,
-            y: pos.1,
-            r: 50.0,
-        };
-
-        if is_mouse_button_down(MouseButton::Left) {
-            circle.draw();
-        }
+        pointer_circle();
         
         next_frame().await
     }
