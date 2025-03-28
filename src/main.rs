@@ -18,16 +18,17 @@ struct Ray {
 }
 
 impl Circle {
-    fn update(&mut self, x: f32, y: f32, r: f32) {
-        self.x = x;
-        self.y = y;
-        self.r = r;
-    }
+    // fn update(&mut self, x: f32, y: f32, r: f32) {
+    //     self.x = x;
+    //     self.y = y;
+    //     self.r = r;
+    // }
 
     fn follow_pointer(&mut self) {
         if is_mouse_button_down(MouseButton::Left) {
             let pos = mouse_position();
-            self.update(pos.0, pos.1, self.r);
+            self.x = pos.0;
+            self.y = pos.1;
         }
     }
 
@@ -37,7 +38,7 @@ impl Circle {
         let path_radius = h / 2.0 * 0.6;
 
         let time = get_time() as f32;
-        let angle = time * 0.5; // controls movement speed
+        let angle = time * 1.0; // controls movement speed
 
         self.x = w / 2.0 + path_radius * angle.cos();
         self.y = h / 2.0 + path_radius * angle.sin();
@@ -88,6 +89,9 @@ impl Circle {
             let mut x: f32 = ray.x;
             let mut y: f32 = ray.y;
 
+            x += (self.r - 1.0) * ray.angle.cos();
+            y += (self.r - 1.0) * ray.angle.sin();
+            
             loop {
                 x += ray.angle.cos();
                 y += ray.angle.sin();
